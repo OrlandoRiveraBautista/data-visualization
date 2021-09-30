@@ -1,17 +1,18 @@
 import React from 'react';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { updateMetricNamesThunk } from '../../app/thunks/metricsThunk';
+// import { useAppDispatch, useAppSelector } from '../../app/hooks';
+// import { updateMetricNamesThunk } from '../../app/thunks/metricsThunk';
 
-export const Metrics: React.FC = () => {
-  const metricNames = useAppSelector((state) => state.metricNames.value);
-  const dispatch = useAppDispatch();
+import { MetricsController } from '../../api/services/controllers/metricsController';
 
-  return (
-    <div>
-      <h1>{metricNames[1]}</h1>
-      <button type="button" onClick={() => dispatch(updateMetricNamesThunk())}>
-        Click
-      </button>
-    </div>
-  );
-};
+const metricsController = new MetricsController();
+// const metricNames = useAppSelector((state) => state.metricNames.value);
+// const dispatch = useAppDispatch();
+
+export const Metrics: React.FC = () => (
+  <div>
+    {/* <h1>{metricNames[1]}</h1> */}
+    <button type="button" onClick={() => metricsController.subNewMeasurement()}>
+      Click
+    </button>
+  </div>
+);

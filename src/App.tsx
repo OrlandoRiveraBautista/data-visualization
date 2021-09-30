@@ -26,7 +26,7 @@ const theme = createTheme({
   },
 });
 
-const App = () => (
+const App: React.FC = () => (
   <Provider store={store}>
     <MuiThemeProvider theme={theme}>
       <CssBaseline />

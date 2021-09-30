@@ -1,17 +1,48 @@
-import { gql, ApolloClient, InMemoryCache } from '@apollo/client';
 import {
-  GetMeasurementsParams,
+  gql,
+  // dasdasd
+  ApolloClient,
+  InMemoryCache,
+  HttpLink,
+  split,
+  // useSubscription,
+} from '@apollo/client';
+import { WebSocketLink } from '@apollo/client/link/ws';
+import { getMainDefinition } from '@apollo/client/utilities';
+
+import {
+  // GetMeasurementsParams,
   Measurement,
   MeasurementQuery,
   MultipleMeasurements,
 } from '../../../interfaces/measurements';
+
+const httpLink = new HttpLink({
+  uri: 'https://react.eogresources.com/graphql',
+});
+
+const wsLink = new WebSocketLink({
+  uri: 'ws://react.eogresources.com/graphql',
+  options: {
+    reconnect: true,
+  },
+});
+
+const splitLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
+  },
+  wsLink,
+  httpLink,
+);
 
 export class MetricsController {
   private readonly client;
 
   constructor() {
     this.client = new ApolloClient({
-      uri: 'https://react.eogresources.com/graphql',
+      link: splitLink,
       cache: new InMemoryCache(),
     });
   }
@@ -100,7 +131,31 @@ export class MetricsController {
     return multipleMeasurements;
   }
 
-  /**
-   *  * Todo: subsciptions to server
-   */
+  async subNewMeasurement() {
+    const SUB = gql`
+      subscription {
+        newMeasurement {
+          metric
+          at
+          value
+          unit
+        }
+      }
+    `;
+
+    const dto = await this.client
+      .subscribe({
+        query: SUB,
+      })
+      .subscribe({
+        next(data) {
+          console.log(data.data);
+        },
+        error(err) {
+          console.error(err);
+        },
+      });
+
+    return dto;
+  }
 }
