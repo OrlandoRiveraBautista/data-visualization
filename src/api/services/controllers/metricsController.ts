@@ -38,7 +38,7 @@ const splitLink = split(
 );
 
 export class MetricsController {
-  private readonly client;
+  client;
 
   constructor() {
     this.client = new ApolloClient({
@@ -68,7 +68,7 @@ export class MetricsController {
     const dto = this.client.query({
       query: gql`
         query {
-          getLastKnownMeasurement(metricName: ${name}) {
+          getLastKnownMeasurement(metricName: "${name}") {
             metric
             at
             value
@@ -82,20 +82,25 @@ export class MetricsController {
       .catch((err) => {
         throw err;
       });
-
     return latestMeasurement;
   }
 
   async getMeasurements(input: MeasurementQuery): Promise<Measurement[]> {
     const dto = this.client.query({
-      query: gql`query{
-        getMeasurements(input: ${input}) {
-          metric
-          at
-          value
-          unit
+      query: gql`
+        query {
+          getMeasurements(input: { 
+            metricName: "${input.metricName}"
+            after: ${input.after}
+            before: ${input.before}
+             }) {
+            metric
+            at
+            value
+            unit
+          }
         }
-      }`,
+      `,
     });
 
     const givenMeasurements: Measurement[] = await dto
@@ -110,7 +115,11 @@ export class MetricsController {
   async getMultipleMeasurements(input: MeasurementQuery): Promise<MultipleMeasurements[]> {
     const dto = this.client.query({
       query: gql`query {
-        getMultipleMeasurements(input: ${input}) {
+        getMultipleMeasurements(input: {
+          metricName: "${input.metricName}"
+            after: ${input.after}
+            before: ${input.before}
+          }) {
           metric
           measurements {
             metric
@@ -131,31 +140,14 @@ export class MetricsController {
     return multipleMeasurements;
   }
 
-  async subNewMeasurement() {
-    const SUB = gql`
-      subscription {
-        newMeasurement {
-          metric
-          at
-          value
-          unit
-        }
+  subNewMeasurement = gql`
+    subscription {
+      newMeasurement {
+        metric
+        at
+        value
+        unit
       }
-    `;
-
-    const dto = await this.client
-      .subscribe({
-        query: SUB,
-      })
-      .subscribe({
-        next(data) {
-          console.log(data.data);
-        },
-        error(err) {
-          console.error(err);
-        },
-      });
-
-    return dto;
-  }
+    }
+  `;
 }

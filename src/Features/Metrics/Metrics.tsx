@@ -1,18 +1,32 @@
-import React from 'react';
-// import { useAppDispatch, useAppSelector } from '../../app/hooks';
-// import { updateMetricNamesThunk } from '../../app/thunks/metricsThunk';
+import React, { useEffect } from 'react';
+import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
-import { MetricsController } from '../../api/services/controllers/metricsController';
+import { GET_MULTIPLE_MEASUREMENTS } from '../../app/sagas/metricsSaga';
+import { MeasurementQuery } from '../../interfaces/measurements';
 
-const metricsController = new MetricsController();
-// const metricNames = useAppSelector((state) => state.metricNames.value);
-// const dispatch = useAppDispatch();
+export const Metrics: React.FC = () => {
+  const metric = useAppSelector((state) => state.metricAttr);
+  const dispatch = useAppDispatch();
 
-export const Metrics: React.FC = () => (
-  <div>
-    {/* <h1>{metricNames[1]}</h1> */}
-    <button type="button" onClick={() => metricsController.subNewMeasurement()}>
-      Click
-    </button>
-  </div>
-);
+  const handleClick = () => {
+    const payload: MeasurementQuery = {
+      metricName: 'tubingPressure',
+      after: 1633199775015,
+    };
+    const s = dispatch({ type: GET_MULTIPLE_MEASUREMENTS, payload });
+    console.log(s);
+  };
+
+  useEffect(() => {
+    console.log(metric);
+  });
+
+  return (
+    <div>
+      {/* <h1>{data.newMeasurement.metric}</h1> */}
+      <button type="button" onClick={handleClick}>
+        Click
+      </button>
+    </div>
+  );
+};

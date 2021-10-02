@@ -1,5 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
+import { ApolloProvider } from '@apollo/client';
 
 import { ToastContainer } from 'react-toastify';
 import { MuiThemeProvider, createTheme } from '@material-ui/core/styles';
@@ -11,6 +12,10 @@ import NowWhat from './components/NowWhat';
 import { Metrics } from './Features/Metrics/Metrics';
 
 import store from './app/store';
+
+import { MetricsController } from './api/services/controllers/metricsController';
+
+const MC = new MetricsController();
 
 const theme = createTheme({
   palette: {
@@ -28,15 +33,17 @@ const theme = createTheme({
 
 const App: React.FC = () => (
   <Provider store={store}>
-    <MuiThemeProvider theme={theme}>
-      <CssBaseline />
-      <Wrapper>
-        <Header />
-        <NowWhat />
-        <Metrics />
-        <ToastContainer />
-      </Wrapper>
-    </MuiThemeProvider>
+    <ApolloProvider client={MC.client}>
+      <MuiThemeProvider theme={theme}>
+        <CssBaseline />
+        <Wrapper>
+          <Header />
+          <NowWhat />
+          <Metrics />
+          <ToastContainer />
+        </Wrapper>
+      </MuiThemeProvider>
+    </ApolloProvider>
   </Provider>
 );
 

@@ -7,8 +7,8 @@ export type Measurement = {
 
 export type MeasurementQuery = {
   metricName: string;
-  after: Date;
-  before: Date;
+  after?: number;
+  before?: number;
 };
 
 export type MultipleMeasurements = {
@@ -17,7 +17,7 @@ export type MultipleMeasurements = {
 };
 
 export interface GetLastKnownMeasurementParams {
-  metricName: string;
+  input: string; // metricName
 }
 
 export interface GetMeasurementsParams {
