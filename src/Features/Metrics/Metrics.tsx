@@ -4,6 +4,9 @@ import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { GET_MULTIPLE_MEASUREMENTS } from '../../app/sagas/metricsSaga';
 import { MeasurementQuery } from '../../interfaces/measurements';
 
+/** Components */
+import Chart from '../../components/Chart/Chart';
+
 export const Metrics: React.FC = () => {
   const metric = useAppSelector((state) => state.metricAttr);
   const dispatch = useAppDispatch();
@@ -23,7 +26,7 @@ export const Metrics: React.FC = () => {
 
   return (
     <div>
-      {/* <h1>{data.newMeasurement.metric}</h1> */}
+      <Chart />
       <button type="button" onClick={handleClick}>
         Click
       </button>
