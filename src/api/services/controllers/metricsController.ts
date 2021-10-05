@@ -112,14 +112,12 @@ export class MetricsController {
     return givenMeasurements;
   }
 
-  async getMultipleMeasurements(input: MeasurementQuery): Promise<MultipleMeasurements[]> {
+  async getMultipleMeasurements(input: MeasurementQuery[]): Promise<MultipleMeasurements[]> {
+    const stringInput = JSON.stringify(input);
+    const graphQLInput = stringInput.replace(/"([^(")"]+)":/g, '$1:');
     const dto = this.client.query({
       query: gql`query {
-        getMultipleMeasurements(input: {
-          metricName: "${input.metricName}"
-            after: ${input.after}
-            before: ${input.before}
-          }) {
+        getMultipleMeasurements(input: ${graphQLInput}) {
           metric
           measurements {
             metric
@@ -136,7 +134,6 @@ export class MetricsController {
       .catch((err) => {
         throw err;
       });
-
     return multipleMeasurements;
   }
 

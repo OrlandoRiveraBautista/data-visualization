@@ -21,7 +21,7 @@ export const getMeasurementsThunk = createAsyncThunk('metrics/getMeasurements', 
 
 export const getMultipleMeasurementsThunk = createAsyncThunk(
   'metrics/getMultipleMeasurements',
-  async (input: MeasurementQuery) => {
+  async (input: MeasurementQuery[]) => {
     const dto = await metricsService.getMultipleMeasurements(input);
     return dto;
   },

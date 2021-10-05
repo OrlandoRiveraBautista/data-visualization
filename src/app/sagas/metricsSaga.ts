@@ -4,6 +4,7 @@ import {
   updateLastMeasurement,
   updateMeasurements,
   updateMultipleMeasurements,
+  resetMetrics,
 } from '../reducers/metricsReducer';
 import { MetricsService } from '../../api/services/metricsService';
 import { Measurement, MultipleMeasurements } from '../../interfaces/measurements';
@@ -16,6 +17,7 @@ export const GET_METRIC_NAMES = 'GET_METRIC_NAMES';
 export const GET_LATEST_MEASUREMENT = 'GET_LATEST_MEASUREMENT';
 export const GET_MEASUREMENTS = 'GET_MEASUREMENTS';
 export const GET_MULTIPLE_MEASUREMENTS = 'GET_MULTIPLE_MEASUREMENTS';
+export const RESET_MEASUREMENTS = 'RESET_MEASUREMENTS';
 
 function* getMetricNamesSaga() {
   try {
@@ -57,11 +59,21 @@ function* getMultipleMeasurementsSage(action: any) {
   }
 }
 
+function* resetMeasurements(): any {
+  try {
+    yield put(resetMetrics());
+  } catch (err) {
+    console.error(err);
+    yield put({ type: 'RESET_METRICS_FAILED', message: err });
+  }
+}
+
 function* rootSaga() {
   yield takeEvery(GET_METRIC_NAMES, getMetricNamesSaga);
   yield takeEvery(GET_LATEST_MEASUREMENT, getLatestMeasurementSaga);
   yield takeEvery(GET_MEASUREMENTS, getMeasurementsSaga);
   yield takeEvery(GET_MULTIPLE_MEASUREMENTS, getMultipleMeasurementsSage);
+  yield takeEvery(RESET_MEASUREMENTS, resetMeasurements);
 }
 
 export default rootSaga;

@@ -23,7 +23,7 @@ export class MetricsService {
     return dto;
   }
 
-  async getMultipleMeasurements(input: MeasurementQuery): Promise<MultipleMeasurements[]> {
+  async getMultipleMeasurements(input: MeasurementQuery[]): Promise<MultipleMeasurements[]> {
     const dto: MultipleMeasurements[] = await this.metricsController.getMultipleMeasurements(input);
     return dto;
   }

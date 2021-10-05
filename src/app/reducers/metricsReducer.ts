@@ -1,12 +1,38 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { Measurement, MultipleMeasurements } from '../../interfaces/measurements';
 
 import { getLatestMeasurementThunk, updateMetricNamesThunk } from '../thunks/metricsThunk';
 
-const initialState = {
+interface AppState {
+  metricNames: string[],
+  latestMeasurement: Measurement,
+  measurements: Measurement[],
+  multipleMeasurements: MultipleMeasurements[]
+}
+
+const initialState: AppState = {
   metricNames: [''],
-  latestMeasurement: {},
-  measurements: [{}],
-  multipleMeasurements: {},
+  latestMeasurement: {
+    metric: '',
+    value: 0,
+    unit: '',
+    at: new Date(0),
+  },
+  measurements: [{
+    metric: '',
+    value: 0,
+    unit: '',
+    at: new Date(0),
+  }],
+  multipleMeasurements: [{
+    metric: '',
+    measurements: [{
+      metric: '',
+      value: 0,
+      unit: '',
+      at: new Date(0),
+    }],
+  }],
 };
 
 export const metricsSlice = createSlice({
@@ -25,6 +51,10 @@ export const metricsSlice = createSlice({
     updateMultipleMeasurements: (state, action) => {
       state.multipleMeasurements = action.payload;
     },
+    resetMetrics: (state) => {
+      state.measurements = initialState.measurements;
+      state.multipleMeasurements = initialState.multipleMeasurements;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(updateMetricNamesThunk.fulfilled, (state, action) => {
@@ -42,7 +72,7 @@ export const {
   updateLastMeasurement,
   updateMeasurements,
   updateMultipleMeasurements,
-  // space
+  resetMetrics,
 } = metricsSlice.actions;
 
 export const selectCount = (state: any) => state.metricNames.metricNames;

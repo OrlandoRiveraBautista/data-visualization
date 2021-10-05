@@ -13,7 +13,7 @@ export type MeasurementQuery = {
 
 export type MultipleMeasurements = {
   metric: string;
-  measurements: Measurement;
+  measurements: Measurement[];
 };
 
 export interface GetLastKnownMeasurementParams {
