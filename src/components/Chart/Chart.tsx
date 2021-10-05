@@ -23,7 +23,7 @@ interface ChartProps {
 }
 
 const Chart: React.FC<ChartProps> = ({ input }: ChartProps) => {
-  const renderMulitpleLines = () => input.map((i: MultipleMeasurements) => <AnimatedLineSeries dataKey={`${i.metric}`} data={i.measurements} {...accessors} />);
+  const renderMulitpleLines = () => input.map((i: MultipleMeasurements) => <AnimatedLineSeries key={i.metric} dataKey={`${i.metric}`} data={i.measurements} {...accessors} />);
 
   return (
     <XYChart height={300} xScale={{ type: 'log' }} yScale={{ type: 'radial' }}>

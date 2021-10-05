@@ -44,21 +44,58 @@ const MetricTrend: React.FC = () => {
     switch (name) {
       case 'after':
         setAfterTime(millisecondsValue);
-        payload = {
-          metricName: metric.latestMeasurement.metric,
-          before: beforeTime,
-          after: millisecondsValue,
-        };
-        dispatch({ type: GET_MEASUREMENTS, payload });
+        if (!compare) {
+          payload = {
+            metricName: metric.latestMeasurement.metric,
+            before: beforeTime,
+            after: millisecondsValue,
+          };
+          dispatch({ type: GET_MEASUREMENTS, payload });
+          return;
+        }
+
+        payload = [
+          {
+            metricName: metric.latestMeasurement.metric,
+            after: millisecondsValue,
+            before: beforeTime,
+          },
+          {
+            metricName: compare,
+            after: millisecondsValue,
+            before: beforeTime,
+          },
+        ];
+
+        dispatch({ type: GET_MULTIPLE_MEASUREMENTS, payload });
+
         break;
       case 'before':
         setBeforeTime(millisecondsValue);
-        payload = {
-          metricName: metric.latestMeasurement.metric,
-          before: millisecondsValue,
-          after: afterTime,
-        };
-        dispatch({ type: GET_MEASUREMENTS, payload });
+        if (!compare) {
+          payload = {
+            metricName: metric.latestMeasurement.metric,
+            before: millisecondsValue,
+            after: afterTime,
+          };
+          dispatch({ type: GET_MEASUREMENTS, payload });
+          return;
+        }
+
+        payload = [
+          {
+            metricName: metric.latestMeasurement.metric,
+            after: afterTime,
+            before: millisecondsValue,
+          },
+          {
+            metricName: compare,
+            after: afterTime,
+            before: millisecondsValue,
+          },
+        ];
+
+        dispatch({ type: GET_MULTIPLE_MEASUREMENTS, payload });
         break;
       case 'compare':
         if (value === metric.latestMeasurement.metric) {
