@@ -89,7 +89,6 @@ const MetricTrend: React.FC = () => {
         dispatch({ type: GET_MULTIPLE_MEASUREMENTS, payload });
         break;
       default:
-        console.log('here by default');
         break;
     }
   };

@@ -26,10 +26,6 @@ const MoreInfoCard: React.FC = () => {
   const [liveValue, setLiveValue] = useState<string>('');
 
   useEffect(() => {
-    console.log('I will change the multiple data');
-  }, [metric.latestMeasurement]);
-
-  useEffect(() => {
     if (!data) return;
 
     if (data.newMeasurement.metric === metric.latestMeasurement.metric) {

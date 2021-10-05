@@ -24,7 +24,6 @@ export const Metrics: React.FC = () => {
   const [showMoreInfo, setShowMoreInfo] = useState<boolean>(false);
 
   useEffect(() => {
-    console.log(metric);
     dispatch({ type: RESET_MEASUREMENTS });
     setShowMoreInfo(false);
   }, [metric.latestMeasurement]);
