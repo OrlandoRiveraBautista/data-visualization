@@ -14,8 +14,12 @@ import {
 import { Measurement, MultipleMeasurements } from '../../interfaces/measurements';
 
 const accessors = {
-  xAccessor: (d: any) => d.at,
+  xAccessor: (d: any) => new Date(d.at).toLocaleTimeString(),
   yAccessor: (d: any) => d.value,
+};
+
+const extra = {
+  uAccessor: (d: any) => d.unit,
 };
 
 interface ChartProps {
@@ -26,11 +30,19 @@ const Chart: React.FC<ChartProps> = ({ input }: ChartProps) => {
   const renderMulitpleLines = () => input.map((i: MultipleMeasurements) => <AnimatedLineSeries key={i.metric} dataKey={`${i.metric}`} data={i.measurements} {...accessors} />);
 
   return (
-    <XYChart height={300} xScale={{ type: 'log' }} yScale={{ type: 'radial' }}>
-      <AnimatedAxis orientation="bottom" />
+    <XYChart height={300} xScale={{ type: 'band' }} yScale={{ type: 'radial' }}>
+      <AnimatedAxis orientation="bottom" numTicks={4} />
       <AnimatedGrid columns={false} />
-      {!input[0].measurements ? <AnimatedLineSeries dataKey={`${input.metric}`} data={input} {...accessors} /> : renderMulitpleLines()}
-      {/* <AnimatedLineSeries dataKey="Line 2" data={data2} {...accessors} /> */}
+      {!input[0].measurements ?
+        (
+          <AnimatedLineSeries
+            key={input[0].metric}
+            dataKey={`${input[0].metric}`}
+            data={input}
+            {...accessors}
+          />
+        ) :
+        renderMulitpleLines()}
       <Tooltip
         snapTooltipToDatumX
         snapTooltipToDatumY
@@ -45,7 +57,7 @@ const Chart: React.FC<ChartProps> = ({ input }: ChartProps) => {
                 </div>
                 {accessors.xAccessor(tooltipData.nearestDatum.datum)}
                 {', '}
-                {accessors.yAccessor(tooltipData.nearestDatum.datum)}
+                {`${accessors.yAccessor(tooltipData?.nearestDatum?.datum)} ${extra.uAccessor(tooltipData.nearestDatum.datum)}`}
               </div>
             ) : (
               <div>

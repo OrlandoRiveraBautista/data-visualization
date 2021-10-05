@@ -24,7 +24,6 @@ function* getMetricNamesSaga() {
     const name: string[] = yield metricsService.getMetricNames();
     yield put(updateNames(name));
   } catch (err) {
-    console.error(err);
     yield put({ type: 'METRIC_NAMES_FAILED', message: err });
   }
 }
@@ -63,7 +62,6 @@ function* resetMeasurements(): any {
   try {
     yield put(resetMetrics());
   } catch (err) {
-    console.error(err);
     yield put({ type: 'RESET_METRICS_FAILED', message: err });
   }
 }
